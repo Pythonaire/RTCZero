@@ -431,7 +431,7 @@ void RTCZero::configureClock() {
   GCLK->GENDIV.reg = GCLK_GENDIV_ID(2)|GCLK_GENDIV_DIV(4);
   while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
     ;
-  GCLK->GENCTRL.reg = (GCLK_GENCTRL_GENEN | GCLK_GENCTRL_SRC_XOSC32K | GCLK_GENCTRL_ID(2) | GCLK_GENCTRL_DIVSEL );
+  GCLK->GENCTRL.reg = (GCLK_GENCTRL_GENEN | GCLK_GENCTRL_SRC_OSCULP32K | GCLK_GENCTRL_ID(2) | GCLK_GENCTRL_DIVSEL );
   while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
     ;
   GCLK->CLKCTRL.reg = (uint32_t)((GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK2 | (RTC_GCLK_ID << GCLK_CLKCTRL_ID_Pos)));
@@ -446,12 +446,14 @@ void RTCZero::configureClock() {
 /* Configure the 32768Hz Oscillator */
 void RTCZero::config32kOSC() 
 {
-  SYSCTRL->XOSC32K.reg = SYSCTRL_XOSC32K_ONDEMAND |
-                         SYSCTRL_XOSC32K_RUNSTDBY |
-                         SYSCTRL_XOSC32K_EN32K |
-                         SYSCTRL_XOSC32K_XTALEN |
-                         SYSCTRL_XOSC32K_STARTUP(6) |
-                         SYSCTRL_XOSC32K_ENABLE;
+  // GCLK_GENCTRL_SRC_OSCULP32K is always on!
+  
+  // SYSCTRL->XOSC32K.reg = SYSCTRL_XOSC32K_ONDEMAND |
+  //                        SYSCTRL_XOSC32K_RUNSTDBY |
+  //                        SYSCTRL_XOSC32K_EN32K |
+  //                        SYSCTRL_XOSC32K_XTALEN |
+  //                        SYSCTRL_XOSC32K_STARTUP(6) |
+  //                        SYSCTRL_XOSC32K_ENABLE;
 }
 
 /* Synchronise the CLOCK register for reading*/
