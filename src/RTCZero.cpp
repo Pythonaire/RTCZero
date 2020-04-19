@@ -19,13 +19,20 @@
 
 #define EPOCH_TIME_OFF      946684800  // This is 1st January 2000, 00:00:00 in epoch time
 #define EPOCH_TIME_YEAR_OFF 100        // years since 1900
+// Default date & time after reset
+#define DEFAULT_YEAR    2000    // 2000..2063
+#define DEFAULT_MONTH   1       // 1..12
+#define DEFAULT_DAY     1       // 1..31
+#define DEFAULT_HOUR    0       // 1..23
+#define DEFAULT_MINUTE  0       // 0..59
+#define DEFAULT_SECOND  0       // 0..59
 
 voidFuncPtr RTC_callBack = NULL;
 
 RTCZero::RTCZero()
 {
   _configured = false;
-}
+};
 
 void RTCZero::begin(bool resetTime)
 {
@@ -83,7 +90,7 @@ void RTCZero::begin(bool resetTime)
     while (RTCisSyncing());
   }
   _configured = true;
-}
+};
 
 void RTC_Handler(void)
 {
@@ -92,7 +99,7 @@ void RTC_Handler(void)
   }
 
   RTC->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_ALARM0; // must clear flag at end
-}
+};
 
 void RTCZero::enableAlarm(Alarm_Match match)
 {
@@ -100,7 +107,7 @@ void RTCZero::enableAlarm(Alarm_Match match)
     RTC->MODE2.Mode2Alarm[0].MASK.bit.SEL = match;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::disableAlarm()
 {
@@ -108,17 +115,17 @@ void RTCZero::disableAlarm()
     RTC->MODE2.Mode2Alarm[0].MASK.bit.SEL = 0x00;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::attachInterrupt(voidFuncPtr callback)
 {
   RTC_callBack = callback;
-}
+};
 
 void RTCZero::detachInterrupt()
 {
   RTC_callBack = NULL;
-}
+};
 
 void RTCZero::standbyMode()
 {
@@ -127,7 +134,7 @@ void RTCZero::standbyMode()
   SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
   __DSB();
   __WFI();
-}
+};
 
 /*
  * Get Functions
@@ -137,67 +144,67 @@ uint8_t RTCZero::getSeconds()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.SECOND;
-}
+};
 
 uint8_t RTCZero::getMinutes()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.MINUTE;
-}
+};
 
 uint8_t RTCZero::getHours()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.HOUR;
-}
+};
 
 uint8_t RTCZero::getDay()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.DAY;
-}
+};
 
 uint8_t RTCZero::getMonth()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.MONTH;
-}
+};
 
 uint8_t RTCZero::getYear()
 {
   RTCreadRequest();
   return RTC->MODE2.CLOCK.bit.YEAR;
-}
+};
 
 uint8_t RTCZero::getAlarmSeconds()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.SECOND;
-}
+};
 
 uint8_t RTCZero::getAlarmMinutes()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.MINUTE;
-}
+};
 
 uint8_t RTCZero::getAlarmHours()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.HOUR;
-}
+};
 
 uint8_t RTCZero::getAlarmDay()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.DAY;
-}
+};
 
 uint8_t RTCZero::getAlarmMonth()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.MONTH;
-}
+};
 
 uint8_t RTCZero::getAlarmYear()
 {
   return RTC->MODE2.Mode2Alarm[0].ALARM.bit.YEAR;
-}
+};
 
 /*
  * Set Functions
@@ -209,7 +216,7 @@ void RTCZero::setSeconds(uint8_t seconds)
     RTC->MODE2.CLOCK.bit.SECOND = seconds;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setMinutes(uint8_t minutes)
 {
@@ -217,7 +224,7 @@ void RTCZero::setMinutes(uint8_t minutes)
     RTC->MODE2.CLOCK.bit.MINUTE = minutes;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setHours(uint8_t hours)
 {
@@ -225,7 +232,7 @@ void RTCZero::setHours(uint8_t hours)
     RTC->MODE2.CLOCK.bit.HOUR = hours;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
 {
@@ -234,7 +241,7 @@ void RTCZero::setTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
     setMinutes(minutes);
     setHours(hours);
   }
-}
+};
 
 void RTCZero::setDay(uint8_t day)
 {
@@ -242,7 +249,7 @@ void RTCZero::setDay(uint8_t day)
     RTC->MODE2.CLOCK.bit.DAY = day;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setMonth(uint8_t month)
 {
@@ -250,7 +257,7 @@ void RTCZero::setMonth(uint8_t month)
     RTC->MODE2.CLOCK.bit.MONTH = month;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setYear(uint8_t year)
 {
@@ -258,7 +265,7 @@ void RTCZero::setYear(uint8_t year)
     RTC->MODE2.CLOCK.bit.YEAR = year;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setDate(uint8_t day, uint8_t month, uint8_t year)
 {
@@ -267,7 +274,7 @@ void RTCZero::setDate(uint8_t day, uint8_t month, uint8_t year)
     setMonth(month);
     setYear(year);
   }
-}
+};
 
 void RTCZero::setAlarmSeconds(uint8_t seconds)
 {
@@ -275,7 +282,7 @@ void RTCZero::setAlarmSeconds(uint8_t seconds)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.SECOND = seconds;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmMinutes(uint8_t minutes)
 {
@@ -283,7 +290,7 @@ void RTCZero::setAlarmMinutes(uint8_t minutes)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.MINUTE = minutes;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmHours(uint8_t hours)
 {
@@ -291,7 +298,7 @@ void RTCZero::setAlarmHours(uint8_t hours)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.HOUR = hours;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
 {
@@ -300,7 +307,7 @@ void RTCZero::setAlarmTime(uint8_t hours, uint8_t minutes, uint8_t seconds)
     setAlarmMinutes(minutes);
     setAlarmHours(hours);
   }
-}
+};
 
 void RTCZero::setAlarmDay(uint8_t day)
 {
@@ -308,7 +315,7 @@ void RTCZero::setAlarmDay(uint8_t day)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.DAY = day;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmMonth(uint8_t month)
 {
@@ -316,7 +323,7 @@ void RTCZero::setAlarmMonth(uint8_t month)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.MONTH = month;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmYear(uint8_t year)
 {
@@ -324,7 +331,7 @@ void RTCZero::setAlarmYear(uint8_t year)
     RTC->MODE2.Mode2Alarm[0].ALARM.bit.YEAR = year;
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setAlarmDate(uint8_t day, uint8_t month, uint8_t year)
 {
@@ -333,7 +340,7 @@ void RTCZero::setAlarmDate(uint8_t day, uint8_t month, uint8_t year)
     setAlarmMonth(month);
     setAlarmYear(year);
   }
-}
+};
 
 uint32_t RTCZero::getEpoch()
 {
@@ -354,12 +361,12 @@ uint32_t RTCZero::getEpoch()
   tm.tm_sec = clockTime.bit.SECOND;
 
   return mktime(&tm);
-}
+};
 
 uint32_t RTCZero::getY2kEpoch()
 {
   return (getEpoch() - EPOCH_TIME_OFF);
-}
+};
 
 void RTCZero::setAlarmEpoch(uint32_t ts)
 {
@@ -374,7 +381,7 @@ void RTCZero::setAlarmEpoch(uint32_t ts)
     setAlarmDate(tmp->tm_mday, tmp->tm_mon + 1, tmp->tm_year - EPOCH_TIME_YEAR_OFF);
     setAlarmTime(tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
   }
-}
+};
 
 void RTCZero::setEpoch(uint32_t ts)
 {
@@ -395,14 +402,14 @@ void RTCZero::setEpoch(uint32_t ts)
 
     while (RTCisSyncing());
   }
-}
+};
 
 void RTCZero::setY2kEpoch(uint32_t ts)
 {
   if (_configured) {
     setEpoch(ts + EPOCH_TIME_OFF);
   }
-}
+};
 
 /* Attach peripheral clock to 32k oscillator */
 void RTCZero::configureClock() {
@@ -412,7 +419,7 @@ void RTCZero::configureClock() {
   while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY);
   GCLK->CLKCTRL.reg = (uint32_t)((GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK2 | (RTC_GCLK_ID << GCLK_CLKCTRL_ID_Pos)));
   while (GCLK->STATUS.bit.SYNCBUSY);
-}
+};
 
 /*
  * Private Utility Functions
@@ -429,7 +436,7 @@ void RTCZero::config32kOSC()
   //                        SYSCTRL_XOSC32K_XTALEN |
   //                        SYSCTRL_XOSC32K_STARTUP(6) |
   //                        SYSCTRL_XOSC32K_ENABLE;
-}
+};
 
 /* Synchronise the CLOCK register for reading*/
 inline void RTCZero::RTCreadRequest() {
@@ -437,34 +444,34 @@ inline void RTCZero::RTCreadRequest() {
     RTC->MODE2.READREQ.reg = RTC_READREQ_RREQ;
     while (RTCisSyncing());
   }
-}
+};
 
 /* Wait for sync in write operations */
 inline bool RTCZero::RTCisSyncing()
 {
   return (RTC->MODE2.STATUS.bit.SYNCBUSY);
-}
+};
 
 void RTCZero::RTCdisable()
 {
   RTC->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE; // disable RTC
   while (RTCisSyncing());
-}
+};
 
 void RTCZero::RTCenable()
 {
   RTC->MODE2.CTRL.reg |= RTC_MODE2_CTRL_ENABLE; // enable RTC
   while (RTCisSyncing());
-}
+};
 
 void RTCZero::RTCreset()
 {
   RTC->MODE2.CTRL.reg |= RTC_MODE2_CTRL_SWRST; // software reset
   while (RTCisSyncing());
-}
+};
 
 void RTCZero::RTCresetRemove()
 {
   RTC->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_SWRST; // software reset remove
   while (RTCisSyncing());
-}
+};
